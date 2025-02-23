@@ -6,9 +6,9 @@
 
 {{ include './agent.system.tool.behaviour.md' }}
 
-{{ include './agent.system.tool.knowledge.md' }}
+<!-- {{ include './agent.system.tool.knowledge.md' }} -->
 
-{{ include './agent.system.tool.memory.md' }}
+<!-- {{ include './agent.system.tool.memory.md' }} -->
 
 <!-- {{ include './agent.system.tool.code_exe.md' }} -->
 
