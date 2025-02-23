@@ -54,3 +54,4 @@ Sends the final response to the user and concludes the task processing.
 - Include relevant thoughts explaining the response
 - Only one 'data' structure should be present based on type
 - When quran_audio_tool is used, response type must be "audio" with corresponding audio data structure
+- When text contains audio file path, response type must be "audio" with corresponding audio data structure
