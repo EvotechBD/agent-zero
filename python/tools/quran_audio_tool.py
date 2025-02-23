@@ -58,22 +58,27 @@ class QuranAudioTool(Tool):
         
         edition_info = await self.find_reciter(reciter_name)
         
-        print("Edition info:", edition_info)  # Debug print
         edition = edition_info['identifier']
         
         try:
-            # Construct audio URL
             audio_url = f"{self.AUDIO_BASE_URL}/{edition_info['bitrate']}/{edition}/{surah_number}.mp3"
             result = {
-                "type": "audio",
-                "url": audio_url,
-                "metadata": {
-                    "surah": surah_number,
-                    "edition": edition_info["englishName"],
-                    "language": edition_info["language"],
-                    "bitrate": edition_info["bitrate"]
+                    "tool_name": "response",
+                    "tool_args": {
+                        "text": f"Audio for Surah {surah_number}",
+                        "type": "audio",
+                        "data": {
+                            "url": audio_url,
+                            "metadata": {
+                                "title": f"Surah {surah_number}",
+                                "format": "mp3",
+                                "bitrate": edition_info["bitrate"],
+                                "language": edition_info["language"],
+                                "reciter": edition_info["englishName"]
+                            }
+                        }
+                    }
                 }
-            }
             return Response(message=result, break_loop=False)
 
         except Exception as e:
