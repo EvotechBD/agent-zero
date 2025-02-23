@@ -480,8 +480,6 @@ class Agent:
         return self.hist_add_message(False, content=content)
 
     async def hist_add_tool_result(self, tool_name: str, tool_result: str|dict):
-        if isinstance(tool_result, dict):
-            tool_result = json.dumps(tool_result)
         content = self.parse_prompt(
             "fw.tool_result.md", tool_name=tool_name, tool_result=tool_result
         )
