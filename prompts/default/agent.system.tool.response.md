@@ -8,7 +8,7 @@ Sends the final response to the user and concludes the task processing.
 
 **Response Types:**
 1. Text Response (Default)
-2. Audio Response
+2. Audio Response (If quran_audio_tool is used)
 3. JSON Response
 
 **Usage Example:**
