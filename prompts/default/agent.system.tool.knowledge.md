@@ -1,28 +1,50 @@
 ### knowledge_tool:
-provide question arg get online and memory response
-powerful tool answers specific questions directly
-ask for result first not guidance
-memory gives guidance online gives current info
-verify memory with online
-**Example usage**:
+Powerful tool to provide direct answers to specific questions by combining online and memory sources.
+Handles multilingual content including Bangla (বাংলা) and Arabic (العربية).
+
+**Features:**
+- Searches online Islamic sources and memory database
+- Ensures proper encoding of multilingual text
+- Validates Islamic authenticity
+- Provides citations and references
+
+**Input Handling:**
+- Automatically detects language (Bangla/English/Arabic)
+- Preserves UTF-8 character encoding
+- Maintains proper text directionality (RTL for Arabic)
+
+**Example usage:**
 ~~~json
 {
     "thoughts": [
-        "Validating question's Islamic authenticity",
-        "Checking Quran and Hadith references",
-        "Verifying scholarly consensus",
-        "Ensuring proper Bangla/Arabic text handling",
-        "Preparing citations and references"
+        "Detecting input language and encoding",
+        "Preparing search query with proper UTF-8 handling",
+        "Searching Islamic sources with language-specific filters",
+        "Validating results for proper character rendering",
+        "Ensuring citations maintain correct text formatting"
     ],
     "reflection": [
-        "Is the response aligned with Islamic teachings?",
-        "Are all Arabic texts properly formatted?",
-        "Is Bangla text encoding correct?",
-        "Are citations complete and accurate?"
+        "Are Bangla/Arabic characters properly encoded?",
+        "Is the response format preserving multilingual text?",
+        "Are all sources properly cited with correct text?",
+        "Is the content Islamically authentic?"
     ],
     "tool_name": "knowledge_tool",
     "tool_args": {
-        "question": "Islamic query with proper encoding"
+        "question": "আপনার প্রশ্ন এখানে লিখুন / Write your question here / اكتب سؤالك هنا"
     }
 }
 ~~~
+
+**Response Format:**
+- Preserves original language formatting
+- Maintains proper character encoding
+- Includes both online and memory sources
+- Provides clear citations with proper text rendering
+
+**Best Practices:**
+- Always validate UTF-8 encoding
+- Check for proper rendering of special characters
+- Ensure correct text direction for Arabic
+- Verify citations maintain proper formatting
+- Double-check Bangla/Arabic text integrity

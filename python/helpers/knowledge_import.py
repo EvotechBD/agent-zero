@@ -44,16 +44,22 @@ def load_knowledge(
 
     # from python.helpers.memory import Memory
 
+    # Add encoding detection
+    def detect_file_encoding(filepath):
+        import chardet
+        with open(filepath, 'rb') as file:
+            raw = file.read()
+            result = chardet.detect(raw)
+            return result['encoding']
+
     # Mapping file extensions to corresponding loader classes
     file_types_loaders = {
-        "txt": TextLoader,
+        "txt": lambda path: TextLoader(path, encoding=detect_file_encoding(path)),
         "pdf": PyPDFLoader,
-        "csv": CSVLoader,
+        "csv": lambda path: CSVLoader(path, encoding=detect_file_encoding(path)),
         "html": UnstructuredHTMLLoader,
-        # "json": JSONLoader,
-        "json": TextLoader,
-        # "md": UnstructuredMarkdownLoader,
-        "md": TextLoader,
+        "json": lambda path: TextLoader(path, encoding=detect_file_encoding(path)),
+        "md": lambda path: TextLoader(path, encoding=detect_file_encoding(path)),
     }
 
     cnt_files = 0
