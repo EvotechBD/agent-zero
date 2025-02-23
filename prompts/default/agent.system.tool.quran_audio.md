@@ -2,7 +2,6 @@
 fetch Quran audio files by surah number and reciter
 returns audio URL and metadata for playback
 use surah_number (1-114) and optional reciter_name
-default reciter is Mishary Rashid Alafasy
 
 usage:
 ~~~json
@@ -14,8 +13,7 @@ usage:
     "tool_name": "quran_audio_tool",
     "tool_args": {
         "surah_number": "1",
-        "reciter_name": "Mishary Alafasy",
-        "default_edition": "ar.alafasy"
+        "reciter_name": "Mishary Alafasy"
     }
 }
 ~~~

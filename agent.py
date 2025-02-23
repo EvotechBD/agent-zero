@@ -479,7 +479,9 @@ class Agent:
         content = self.parse_prompt("fw.warning.md", message=message)
         return self.hist_add_message(False, content=content)
 
-    async def hist_add_tool_result(self, tool_name: str, tool_result: str):
+    async def hist_add_tool_result(self, tool_name: str, tool_result: str|dict):
+        if isinstance(tool_result, dict):
+            tool_result = json.dumps(tool_result)
         content = self.parse_prompt(
             "fw.tool_result.md", tool_name=tool_name, tool_result=tool_result
         )
@@ -623,7 +625,6 @@ class Agent:
             await asyncio.sleep(0.1)
 
     async def process_tools(self, msg: str):
-        # search for tool usage requests in agent message
         tool_request = extract_tools.json_parse_dirty(msg)
 
         if tool_request is not None:
@@ -631,14 +632,18 @@ class Agent:
             tool_args = tool_request.get("tool_args", {})
             tool = self.get_tool(tool_name, tool_args, msg)
 
-            await self.handle_intervention()  # wait if paused and handle intervention message if needed
+            await self.handle_intervention()
             await tool.before_execution(**tool_args)
-            await self.handle_intervention()  # wait if paused and handle intervention message if needed
+            await self.handle_intervention()
             response = await tool.execute(**tool_args)
-            await self.handle_intervention()  # wait if paused and handle intervention message if needed
+            await self.handle_intervention()
             await tool.after_execution(response)
-            await self.handle_intervention()  # wait if paused and handle intervention message if needed
+            await self.handle_intervention()
+            
             if response.break_loop:
+                # Handle both dict and string responses
+                if isinstance(response.message, dict):
+                    return json.dumps(response.message)
                 return response.message
         else:
             msg = self.read_prompt("fw.msg_misformat.md")
