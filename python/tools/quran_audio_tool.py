@@ -65,7 +65,7 @@ class QuranAudioTool(Tool):
             result = {
                     "tool_name": "response",
                     "tool_args": {
-                        "text": f"Audio for Surah {surah_number}",
+                        "text": audio_url,
                         "type": "audio",
                         "data": {
                             "url": audio_url,
