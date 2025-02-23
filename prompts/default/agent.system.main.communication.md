@@ -11,15 +11,20 @@ no other text
 ~~~json
 {
     "thoughts": [
-        "instructions?",
-        "solution steps?",
-        "processing?",
-        "actions?"
+        "Checking if question is within Islamic scope",
+        "Identifying relevant Quranic verses/Hadith",
+        "Planning response structure with proper citations",
+        "Determining language format (Bangla/English/Mixed)",
+        "Validating Islamic authenticity of information"
     ],
-    "tool_name": "name_of_tool",
+    "reflection": [
+        "Ensuring proper handling of Arabic text",
+        "Verifying Bangla character encoding",
+        "Confirming citation accuracy"
+    ],
+    "tool_name": "selected_tool",
     "tool_args": {
-        "arg1": "val1",
-        "arg2": "val2"
+        "arg1": "value1"
     }
 }
 ~~~

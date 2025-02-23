@@ -9,10 +9,6 @@ from python.helpers.searxng import search as searxng
 SEARCH_ENGINE_RESULTS = 10
 class Knowledge(Tool):
     async def execute(self, question="", **kwargs):
-        # Check if text contains Bangla characters
-        if any('\u0980' <= c <= '\u09FF' for c in question):
-            return Response(message="", break_loop=False)
-
         # Create tasks for Islamic knowledge search
         tasks = [
             self.searxng_search(f"Islamic {question} site:sunnah.com OR site:quran.com"),
