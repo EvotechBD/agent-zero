@@ -774,9 +774,9 @@ def get_default_settings() -> Settings:
     return Settings(
         chat_model_provider=ModelProvider.OPENAI.name,
         chat_model_name="gpt-4o",
-        chat_model_kwargs={ "temperature": "0" },
+        chat_model_kwargs={ "temperature": "0.2", "top_p": "0.9" },
         chat_model_ctx_length=120000,
-        chat_model_ctx_history=0.7,
+        chat_model_ctx_history=0.8,
         chat_model_rl_requests=0,
         chat_model_rl_input=0,
         chat_model_rl_output=0,
