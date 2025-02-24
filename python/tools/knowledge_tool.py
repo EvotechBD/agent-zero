@@ -11,28 +11,9 @@ SEARCH_ENGINE_RESULTS = 10
 class Knowledge(Tool):
     async def execute(self, question="", **kwargs):
         try:
-            # Detect language and ensure proper encoding
-            def detect_language(text):
-                # Check for Bangla characters
-                if any('\u0980' <= c <= '\u09FF' for c in text):
-                    return 'bn'
-                # Check for Arabic characters
-                elif any('\u0600' <= c <= '\u06FF' for c in text):
-                    return 'ar'
-                return 'en'
-
-            # Ensure proper UTF-8 encoding with language detection
+            # Ensure proper UTF-8 encoding
             encoded_question = question.encode('utf-8').decode('utf-8')
-            lang = detect_language(encoded_question)
-            
-            # Adjust search query based on language
-            search_query = encoded_question
-            if lang == 'bn':
-                search_query = f"Islamic {encoded_question} site:sunnah.com OR site:quran.com OR site:hadithbd.com"
-            elif lang == 'ar':
-                search_query = f"Islamic {encoded_question} site:sunnah.com OR site:quran.com OR site:islamqa.info"
-            else:
-                search_query = f"Islamic {encoded_question} site:sunnah.com OR site:quran.com"
+            search_query = f"Islamic {encoded_question} site:sunnah.com OR site:quran.com"
 
             # Create tasks for Islamic knowledge search
             tasks = [
@@ -53,7 +34,6 @@ class Knowledge(Tool):
                 "tool.knowledge.response.md",
                 online_sources=((searxng_result + "\n\n") if searxng_result else ""),
                 memory=memory_result,
-                language=lang
             )
 
             await self.agent.handle_intervention(msg)

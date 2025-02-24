@@ -16,7 +16,6 @@ class MemorySave(Tool):
         
         metadata = {
             "area": area,
-            "language": "bn" if any('\u0980' <= c <= '\u09FF' for c in text) else "en",
             **kwargs
         }
 
