@@ -104,11 +104,7 @@ def load_knowledge(
                 loader_cls = file_types_loaders[ext]
                 loader = loader_cls(
                     file_path,
-                    **(
-                        text_loader_kwargs
-                        if ext in ["txt", "csv", "html", "md"]
-                        else {}
-                    ),
+                    **text_loader_kwargs,
                 )
                 file_data["documents"] = loader.load_and_split()
                 for doc in file_data["documents"]:
