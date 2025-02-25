@@ -30,18 +30,42 @@ class Knowledge(Tool):
             memory_result = self.format_result(memory_result, "Islamic Knowledge Base")
 
             # Format response with language-specific handling
-            msg = self.agent.read_prompt(
+            formatted_response = self.agent.read_prompt(
                 "tool.knowledge.response.md",
                 online_sources=((searxng_result + "\n\n") if searxng_result else ""),
                 memory=memory_result,
             )
 
-            await self.agent.handle_intervention(msg)
-            return Response(message=msg, break_loop=False)
+            # Return properly formatted JSON response
+            return Response(
+                message={
+                    "thoughts": [
+                        "Processed Islamic knowledge search",
+                        "Combined online and memory sources",
+                        "Formatted response with proper encoding"
+                    ],
+                    "tool_name": "response",
+                    "tool_args": {
+                        "text": formatted_response,
+                        "type": "text"
+                    }
+                },
+                break_loop=True
+            )
 
         except Exception as e:
             error_msg = f"Error processing knowledge request: {str(e)}"
-            return Response(message=error_msg, break_loop=False)
+            return Response(
+                message={
+                    "thoughts": ["Error occurred during knowledge processing"],
+                    "tool_name": "response",
+                    "tool_args": {
+                        "text": error_msg,
+                        "type": "text"
+                    }
+                },
+                break_loop=True
+            )
 
     def format_result_searxng(self, result, title):
         if isinstance(result, Exception):

@@ -50,16 +50,25 @@ def load_knowledge(
         with open(filepath, 'rb') as file:
             raw = file.read()
             result = chardet.detect(raw)
-            return result['encoding']
+            return result['encoding'] or 'utf-8'  # Fallback to utf-8 if detection fails
 
-    # Mapping file extensions to corresponding loader classes
+    # Create loader instances with proper encoding
+    def create_text_loader(path):
+        encoding = detect_file_encoding(path)
+        return TextLoader(path, encoding=encoding)
+
+    def create_csv_loader(path):
+        encoding = detect_file_encoding(path)
+        return CSVLoader(path, encoding=encoding)
+
+    # Mapping file extensions to loader creation functions
     file_types_loaders = {
-        "txt": lambda path: TextLoader(path, encoding=detect_file_encoding(path)),
+        "txt": create_text_loader,
         "pdf": PyPDFLoader,
-        "csv": lambda path: CSVLoader(path, encoding=detect_file_encoding(path)),
+        "csv": create_csv_loader,
         "html": UnstructuredHTMLLoader,
-        "json": lambda path: TextLoader(path, encoding=detect_file_encoding(path)),
-        "md": lambda path: TextLoader(path, encoding=detect_file_encoding(path)),
+        "json": create_text_loader,
+        "md": create_text_loader,
     }
 
     cnt_files = 0
@@ -85,11 +94,17 @@ def load_knowledge(
                 progress=f"\nFound {len(kn_files)} knowledge files in {knowledge_dir}, processing...",
             )
 
-    for file_path in kn_files:
-        ext = file_path.split(".")[-1].lower()
-        if ext in file_types_loaders:
-            checksum = calculate_checksum(file_path)
-            file_key = file_path  # os.path.relpath(file_path, knowledge_dir)
+    for filepath in kn_files:
+        try:
+            extension = os.path.splitext(filepath)[1].lower().lstrip(".")
+            if extension not in file_types_loaders:
+                continue
+
+            loader_class = file_types_loaders[extension]
+            loader = loader_class(filepath)  # Create loader instance directly
+            
+            checksum = calculate_checksum(filepath)
+            file_key = filepath  # os.path.relpath(filepath, knowledge_dir)
 
             # Load existing data from the index or create a new entry
             file_data = index.get(file_key, {})
@@ -101,20 +116,23 @@ def load_knowledge(
 
             if file_data["state"] == "changed":
                 file_data["checksum"] = checksum
-                loader_cls = file_types_loaders[ext]
-                loader = loader_cls(
-                    file_path,
-                    **text_loader_kwargs,
-                )
+                loader = loader_class(filepath)
                 file_data["documents"] = loader.load_and_split()
                 for doc in file_data["documents"]:
                     doc.metadata = {**doc.metadata, **metadata}
                 cnt_files += 1
                 cnt_docs += len(file_data["documents"])
-                # PrintStyle.standard(f"Imported {len(file_data['documents'])} documents from {file_path}")
+                # PrintStyle.standard(f"Imported {len(file_data['documents'])} documents from {filepath}")
 
             # Update the index
             index[file_key] = file_data  # type: ignore
+
+        except Exception as e:
+            if log_item:
+                log_item.stream(
+                    progress=f"\nError processing {filepath}: {str(e)}"
+                )
+            continue
 
     # loop index where state is not set and mark it as removed
     for file_key, file_data in index.items():
